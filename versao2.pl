@@ -1,3 +1,26 @@
+:- dynamic sim/1,nao/1.
+
+/*  Programa principal  */
+
+go:- hipotese(Animal),
+      write('O animal que voce pensou eh um(a): '),
+      write(Animal),
+      nl,
+      limpa_base.
+
+
+/* Hipoteses a serem testadas */
+
+hipotese(leopardo):- leopardo, !.
+hipotese(tigre):- tigre, !.
+hipotese(girafa):- girafa, !.
+hipotese(zebra):- zebra, !.
+hipotese(avestruz):- avestruz, !.
+hipotese(pinguim):- pinguim, !.
+hipotese(albatroz):- albatroz, !.
+hipotese(desconhecido).
+
+
 /* Regras para identificacao do animal  */
 
 leopardo:- carnivoro,
@@ -55,6 +78,20 @@ ungulado:- mamifero,
 	   verifica(tem_dedos_pares).
 
 
+/* Formulacao das perguntas */
+
+pergunta(X):-
+         write('O animal tem o seguinte atributo: '),
+         write(X),
+         write('? '),
+         read(Resp),
+         nl,
+         ( (Resp == sim ; Resp == s)
+           ->
+            assert(sim(X)) ;
+            assert(nao(X)), fail).
+
+
 /* Verificacao */
 
 verifica(S):-
@@ -65,3 +102,10 @@ verifica(S):-
           ->
           fail ;
           pergunta(S))).
+
+
+/* Desfaz todos os fatos sim/1 e nao/1  */
+
+limpa_base:- retract(sim(_)),fail. 
+limpa_base:- retract(nao(_)),fail.
+limpa_base.
